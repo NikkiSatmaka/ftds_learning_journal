@@ -1,0 +1,103 @@
+-- Melihat semua data 
+select * 
+from teachers;
+
+-- Melihat dosen yang salarynya lebih besar dari 50000
+select *
+from teachers
+where salary>50000;
+
+-- Menghitung dosen yang salarynya lebih besar dari 50000
+select count(*)
+from teachers
+where salary>50000;
+
+-- Melihat dosen yang first_name adalah "samuel"
+select * 
+from teachers
+where binary first_name='samuel';
+
+-- Melihat dosen yang first_name berawalan "sam-"
+select * 
+from teachers 
+where first_name Like 'sam%';
+
+-- Melihat dosen yang first_name berakhiran "-sam"
+select * 
+from teachers 
+where first_name Like '%sam';
+
+-- Melihat dosen yang first_name mengandung "-sam-"
+select * 
+from teachers 
+where first_name Like '%sam%';
+
+-- Melihat dosen yang memiliki gaji tertinggi 
+select first_name, last_name
+from teachers
+where salary=(
+  select max(salary)
+  from teachers
+);
+
+-- Melihat rata-rata gaji dosen di Cambridge University
+select avg(salary), FLOOR(avg(salary)), CEIL(avg(salary))
+from teachers
+where school='Cambridge University';
+
+-- Melihat gaji tertinggi di setiap universitas
+select school, max(salary)
+from teachers
+group by school;
+
+-- Melihat dosen yang memiliki gaji tertinggi di setiap universitas 
+select first_name, last_name, school, salary
+from teachers
+where (school, salary) IN(
+  select school, max(salary)
+  from teachers
+  group by school
+);
+
+-- Menggabungkan table teachers dengan table courses 
+select * 
+from teachers
+join courses on teachers.id=courses.teachers_id;
+
+-- Melihat semua dosen yang mengajar Calculus
+select * 
+from teachers
+join courses on teachers.id=courses.teachers_id
+where courses.name='Calculus';
+
+-- Melihat jumlah mata kuliah setiap universitas 
+select teachers.school, count(courses.id) as total_matkul
+from teachers
+join courses on teachers.id=courses.teachers_id
+group by teachers.school;
+
+-- Melihat universitas apa saja yang total mata kuliahnya lebih dari 5
+select teachers.school, count(courses.id) as total_matkul
+from teachers
+join courses on teachers.id=courses.teachers_id
+group by teachers.school
+having total_matkul>5;
+
+-- Melihat nama dosen (first_name) beserta jumlah mata kuliah yang diajarkan
+select teachers.first_name, count(courses.id) as total_matkul
+FROM teachers 
+join courses on teachers.id=courses.teachers_id
+group by teachers.first_name
+order by total_matkul desc, teachers.first_name asc;
+
+-- Syntax Google BigQuery
+-- Melihat tindak kejahatan di Chicago yang terjadi di 'STREET'
+select * 
+from `bigquery-public-data.chicago_crime.crime`
+where location_description='STREET';
+
+-- Melihat jenis tindakan kejahatan di Chicago yang unique beserta jumlahnya dan diurutkan dari kejahatan terbanyak hingga terkecil
+select primary_type, count(*) as total_crime
+from `bigquery-public-data.chicago_crime.crime`
+group by primary_type
+order by total_crime desc;
