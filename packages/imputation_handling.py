@@ -8,7 +8,7 @@ Useful functions to handle missing values
 """
 
 
-def prepare_imputation(data, variable):
+def prepare_imputation(data, variable, *args):
     """
     Prepare data for imputation
     
@@ -18,6 +18,8 @@ def prepare_imputation(data, variable):
         Dataframe to be prepared for imputation
     variable : list
         List of columns to be imputed
+    *args :
+        List of special keywords representing the missing values
 
     Returns
     -------
@@ -28,9 +30,10 @@ def prepare_imputation(data, variable):
     if data is None or variable is None:
         raise ValueError('data and variable must be specified')
 
-    # replace 'unknown' with nan for features in impute_cols
+    # replace missval with nan for features in impute_cols
     for col in variable:
-        data[col] = data[col].replace('unknown', np.nan)
+        for missval in args:
+            data[col] = data[col].replace(missval, np.nan)
     
     return data
 
