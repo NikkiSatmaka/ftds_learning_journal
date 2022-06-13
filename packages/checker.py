@@ -116,6 +116,6 @@ def check_missing_special(data, *args):
     missing_values = pd.DataFrame(missing_values)
     
     # drop the rows with no missing values
-    missing_values = missing_values[missing_values['tot_missing'] > 0]
+    missing_values = missing_values[missing_values['tot_missing'] > 0].reset_index(drop=True)
 
     return missing_values
