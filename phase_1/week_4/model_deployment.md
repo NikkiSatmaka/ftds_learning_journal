@@ -145,7 +145,7 @@ sns.countplot("gender", hue="status", data=data)
 plt.show()
 ```
 
-![](vscode-remote://wsl%2Bubuntu/home/nikki/workspace/hacktiv8/ftds_learning_journal/phase_1/week_4/assets/1605086522228.jpg)
+<img class="fr-dib" src="./assets/1605086522228.jpg" style="width: 548px;" srcset="./assets/1605086522228.jpg?width=1920 1x, ./assets/1605086522228.jpg?width=1920&amp;dpr=2 2x, ./assets/1605086522228.jpg?width=1920&amp;dpr=3 3x">
 
 ```python
 sns.kdeplot(data.salary[data.gender=="M"])
