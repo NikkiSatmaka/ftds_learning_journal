@@ -11,7 +11,7 @@ Useful functions to handle missing values
 def prepare_imputation(data, variable, *args):
     """
     Prepare data for imputation
-    
+
     Parameters
     ----------
     data : pandas.DataFrame
@@ -26,7 +26,7 @@ def prepare_imputation(data, variable, *args):
     pandas.DataFrame
         Dataframe prepared for imputation
     """
-    
+
     if data is None or variable is None:
         raise ValueError('data and variable must be specified')
 
@@ -34,7 +34,7 @@ def prepare_imputation(data, variable, *args):
     for col in variable:
         for missval in args:
             data[col] = data[col].replace(missval, np.nan)
-    
+
     return data
 
 
@@ -48,7 +48,7 @@ def impute_na(data, variable, mean_value, median_value):
         Dataframe to be imputed
     variable : str
         Column to be imputed
-    mean_value : float  
+    mean_value : float
         Mean value to be used for imputation
     median_value : float
         Median value to be used for imputation
@@ -64,3 +64,4 @@ def impute_na(data, variable, mean_value, median_value):
     data[variable+'_zero'] = data[variable].fillna(0)
 
     return data
+
