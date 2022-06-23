@@ -29,13 +29,16 @@ def prepare_imputation(data, variable, *args):
 
     if data is None or variable is None:
         raise ValueError('data and variable must be specified')
+    
+    # prepare output dataframe
+    output_data = data.copy()
 
     # replace missval with nan for features in impute_cols
     for col in variable:
         for missval in args:
-            data[col] = data[col].replace(missval, np.nan)
+            output_data[col] = output_data[col].replace(missval, np.nan)
 
-    return data
+    return output_data
 
 
 def impute_na(data, variable, mean_value, median_value):
@@ -58,10 +61,13 @@ def impute_na(data, variable, mean_value, median_value):
     pandas.DataFrame
         Dataframe with imputed values
     """
+    
+    # prepare output dataframe
+    output_data = data.copy()
 
-    data[variable+'_mean'] = data[variable].fillna(mean_value)
-    data[variable+'_median'] = data[variable].fillna(median_value)
-    data[variable+'_zero'] = data[variable].fillna(0)
+    output_data[variable+'_mean'] = output_data[variable].fillna(mean_value)
+    output_data[variable+'_median'] = output_data[variable].fillna(median_value)
+    output_data[variable+'_zero'] = output_data[variable].fillna(0)
 
-    return data
+    return output_data
 

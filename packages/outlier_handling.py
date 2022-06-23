@@ -209,7 +209,7 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
 
     Returns
     -------
-    data : pandas DataFrame
+    output_data : pandas DataFrame
         Trimmed data
     if target is not None:
         target : pandas Series or DataFrame
@@ -221,8 +221,11 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
     if target is not None:
         adjust_target = True
 
+    # prepare output dataframe
+    output_data = data.copy()
+
     # run outlier detection
-    data_outlier = outlier_summary(data, fold)
+    data_outlier = outlier_summary(output_data, fold)
 
     # create a list of columns to trim outliers for normal distribution
     norm_trim_cols = data_outlier[
@@ -267,11 +270,11 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         )
 
         # trim outliers for normal distribution
-        data = trim_norm.fit_transform(data)
+        output_data = trim_norm.fit_transform(output_data)
 
         # adjust target to match the features
         if adjust_target:
-            target = target.drop(target.index.difference(data.index))
+            target = target.drop(target.index.difference(output_data.index))
 
     # outlier capping for normal distribution
     if len(norm_cap_cols) > 0:
@@ -284,7 +287,7 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         )
 
         # cap outliers for normal distribution
-        data = cap_norm.fit_transform(data)
+        output_data = cap_norm.fit_transform(output_data)
 
     # outlier trimming for skewed distribution
     if len(skew_trim_cols) > 0:
@@ -297,11 +300,11 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         )
 
         # trim outliers for skewed distribution
-        data = trim_skew.fit_transform(data)
+        output_data = trim_skew.fit_transform(output_data)
 
         # adjust target to match the features
         if adjust_target:
-            target = target.drop(target.index.difference(data.index))
+            target = target.drop(target.index.difference(output_data.index))
 
     # outlier capping for skewed distribution
     if len(skew_cap_cols) > 0:
@@ -314,9 +317,9 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         )
 
         # cap outliers for skewed distribution
-        data = cap_skew.fit_transform(data)
+        output_data = cap_skew.fit_transform(output_data)
 
     if adjust_target:
-        return data, target
+        return output_data, target
     else:
-        return data
+        return output_data
