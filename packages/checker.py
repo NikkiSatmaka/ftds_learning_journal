@@ -106,7 +106,7 @@ def check_missing_special(data, *args):
                 continue
             # count the number of missing values
             tot_missval += len(data[data[col] == missval])
-        
+
         # add the missing values to the dictionary
         missing_values['feats'].append(col)
         missing_values['tot_missing'].append(tot_missval)
@@ -114,7 +114,48 @@ def check_missing_special(data, *args):
 
     # create a dataframe with the missing values dictionary
     missing_values = pd.DataFrame(missing_values)
-    
+
+    # drop the rows with no missing values
+    missing_values = missing_values[missing_values['tot_missing'] > 0].reset_index(drop=True)
+
+    return missing_values
+
+
+def check_links_only(data):
+    """
+    Function to check for instances of features which contains only links in
+    the dataset and return a DataFrame with the number of instances and their
+    percentage
+
+    Parameters:
+    -----------
+    data (dataframe): dataframe to be checked
+
+    Returns
+    -------
+    DataFrame
+        Number of instances in dataset
+    """
+
+    # create dictionary to store missing values
+    missing_values = {
+        'feats': [],
+        'tot_missing': [],
+        'tot_missing_pct': []
+    }
+
+    # Loop through the columns
+    for col in data.columns:
+        tot_missval = len(data[data[col].str.contains(r'^http\S+$', regex=True)])
+
+        # add the missing values to the dictionary
+        missing_values['feats'].append(col)
+        missing_values['tot_missing'].append(tot_missval)
+        missing_values['tot_missing_pct'].append(tot_missval / len(data) * 100)
+
+    # create a dataframe with the missing values dictionary
+    missing_values = pd.DataFrame(missing_values)
+
     # drop the rows with no missing values
     missing_values = missing_values[missing_values['tot_missing'] > 0].reset_index(drop=True)
 

@@ -29,7 +29,7 @@ def prepare_imputation(data, variable, *args):
 
     if data is None or variable is None:
         raise ValueError('data and variable must be specified')
-    
+
     # prepare output dataframe
     output_data = data.copy()
 
@@ -61,7 +61,7 @@ def impute_na(data, variable, mean_value, median_value):
     pandas.DataFrame
         Dataframe with imputed values
     """
-    
+
     # prepare output dataframe
     output_data = data.copy()
 
@@ -71,3 +71,39 @@ def impute_na(data, variable, mean_value, median_value):
 
     return output_data
 
+
+def drop_title_links_only(data, target, variable):
+    """
+    Function to check for instances of features which contains only links in
+    the dataset and return a DataFrame with the number of instances and their
+    percentage
+
+    Parameters:
+    -----------
+    data (dataframe): dataframe to be checked
+    target : pandas Series or DataFrame
+        Target variable name
+    variable : list
+        List of columns to be imputed
+
+    Returns
+    -------
+    DataFrame
+        Number of instances in dataset
+    """
+
+    if data is None or target is None or variable is None:
+        raise ValueError('data, target, and variable must be specified')
+
+    # prepare output dataframe
+    output_data = data.copy()
+    output_target = target.copy()
+
+    # drop instances which contains only links for the specified features
+    for col in variable:
+        output_data = output_data[~output_data[col].str.contains(r'^http\S+$', regex=True)]
+
+    # adjust output_target to match the features
+    output_target = output_target.drop(output_target.index.difference(output_data.index))
+
+    return output_data, output_target

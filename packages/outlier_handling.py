@@ -158,7 +158,7 @@ def check_outlier(data, fold=1.5):
         data_outlier['tot_left_tail_pct'].append(tot_left_tail_pct)
         data_outlier['tot_outlier'].append(tot_outlier)
         data_outlier['tot_outlier_pct'].append(tot_outlier_pct)
-    
+
     data_outlier = pd.DataFrame(data_outlier)
 
     return data_outlier
@@ -223,6 +223,7 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
 
     # prepare output dataframe
     output_data = data.copy()
+    output_target = target.copy()
 
     # run outlier detection
     data_outlier = outlier_summary(output_data, fold)
@@ -272,9 +273,9 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         # trim outliers for normal distribution
         output_data = trim_norm.fit_transform(output_data)
 
-        # adjust target to match the features
+        # adjust output_target to match the features
         if adjust_target:
-            target = target.drop(target.index.difference(output_data.index))
+            output_target = output_target.drop(output_target.index.difference(output_data.index))
 
     # outlier capping for normal distribution
     if len(norm_cap_cols) > 0:
@@ -302,9 +303,9 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         # trim outliers for skewed distribution
         output_data = trim_skew.fit_transform(output_data)
 
-        # adjust target to match the features
+        # adjust output_target to match the features
         if adjust_target:
-            target = target.drop(target.index.difference(output_data.index))
+            output_target = output_target.drop(output_target.index.difference(output_data.index))
 
     # outlier capping for skewed distribution
     if len(skew_cap_cols) > 0:
@@ -320,6 +321,6 @@ def trim_cap_outliers(data, exception_list=[], target=None, fold=1.5):
         output_data = cap_skew.fit_transform(output_data)
 
     if adjust_target:
-        return output_data, target
+        return output_data, output_target
     else:
         return output_data
