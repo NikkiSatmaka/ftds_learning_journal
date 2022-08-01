@@ -22,14 +22,28 @@ dependencies:
   - selenium
   - wordcloud
   - feature_engine
+  - mlxtend
   - kaggle
   - beautifulsoup4
   - streamlit
+  - dash
+  - dash-core-components
   - pandas-profiling
+  - django
   - flask
   - imbalanced-learn
   - xgboost
-  - tensorflow
-  - pytorch
+  - tensorflow-cpu
+  - tensorflow-hub
+  - pytorch-cpu
+  - keras-tuner
+  - pydot
+  - opencv
+  - transformers
+  - nltk
+  - nltk_data
+  - spacy
+  - spacy-model-en_core_web_md
 
   - pip:
+    - PySastrawi
